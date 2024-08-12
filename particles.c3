@@ -12,6 +12,7 @@ struct Particle {
 
 const int WIDTH = 1920 / 2;
 const int HEIGHT = 1080 / 2;
+const Vector2 CENTER = { WIDTH / 2, HEIGHT / 2 };
 const float[<2>] MIN_VEC = {0.0, 0.0};
 const float[<2>] MAX_VEC = {(float) WIDTH, (float) HEIGHT};
 const uint PARTICLES = 500;
@@ -132,6 +133,14 @@ fn void main()
                     acc.y -= ((double) dist_vec.y / dist) * 5.0;
                 }
             }
+            if (raylib::is_key_down(raylib::KEY_SPACE)) {
+                Vector2 dist_vec = CENTER - self.pos;
+                float dist = self.pos.distance(CENTER);
+                if (dist > 0) {
+                    acc.x += ((double) dist_vec.x / dist) * 10.0;
+                    acc.y += ((double) dist_vec.y / dist) * 10.0;
+                }
+            }
             acc *= MAX_DISTANCE * FORCE_FACTOR;
             particles[i].vel *= FRICTION_FACTOR;
             particles[i].vel += acc * (float) dt;
@@ -152,7 +161,7 @@ fn void main()
 
         raylib::begin_drawing();
         defer raylib::end_drawing();
-        raylib::clear_background({0x00, 0x00, 0x00, 0xff});
+        raylib::clear_background({ 14, 14, 14, 255 });
         foreach (particle : particles) {
             raylib::draw_circle(
                 ((CInt) (int) particle.pos.x.loop(0, WIDTH)),
